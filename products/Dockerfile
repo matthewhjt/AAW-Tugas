@@ -24,7 +24,7 @@ RUN node dist/src/db/migrate.js
 # Production image
 FROM node:18.18.2-slim
 
-ENV PORT 8001
+ENV PORT 8002
 ENV NODE_ENV production
 
 WORKDIR /products
@@ -39,6 +39,6 @@ RUN npm install -g pnpm && pnpm install --prod
 # Install dependencies untuk production
 RUN pnpm install --prod --frozen-lockfile
 
-EXPOSE 8001
+EXPOSE 8002
 
 CMD ["sh", "-c", "node dist/src/db/migrate.js && node dist/src/server.js"]

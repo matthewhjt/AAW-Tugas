@@ -71,8 +71,8 @@ services:
     environment:
       - TENANT_ID=2d19ceab-e22a-427c-80e1-b004013b090f
       - JWT_SECRET=auth_ms_jwt_secret
-      - AUTH_SERVICE_URL=http://authentication:8000
-      - TENANT_SERVICE_URL=http://tenant:8003
+      - AUTH_SERVICE_URL=http://localhost:8000
+      - TENANT_SERVICE_URL=http://localhost:8003
       - DB_HOST=products_db
       - DB_PORT=5432
       - DB_USER=postgres
@@ -103,7 +103,7 @@ services:
     environment:
       - TENANT_ID=47dd6b24-0b23-46b0-a662-776158d089ba
       - JWT_SECRET=auth_ms_jwt_secret
-      - AUTH_SERVICE_URL=http://authentication:8000
+      - AUTH_SERVICE_URL=http://localhost:8000
       - DB_HOST=tenant_db
       - DB_PORT=5432
       - DB_USER=postgres
