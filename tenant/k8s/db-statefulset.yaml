@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-tenants
+spec:
+  serviceName: "postgres-tenants"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-tenants
+  template:
+    metadata:
+      labels:
+        app: postgres-tenants
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: tenants-config
+            - secretRef:
+                name: tenants-secret
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

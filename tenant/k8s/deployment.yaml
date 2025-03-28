@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tenants-deployment
+  labels:
+    app: tenants
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tenants
+  template:
+    metadata:
+      labels:
+        app: tenants
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ["sh", "-c", "until nc -z postgres-tenants 5432; do echo waiting for db; sleep 2; done;"]
+        - name: migrate-db
+          image: tenants-service:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "node dist/src/db/migrate.js"]
+          envFrom:
+            - configMapRef:
+                name: tenants-config
+            - secretRef:
+                name: tenants-secret
+
+      containers:
+        - name: tenants
+          image: tenants-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8003
+          envFrom:
+            - configMapRef:
+                name: tenants-config
+            - secretRef:
+                name: tenants-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8003
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8003
+            initialDelaySeconds: 3
+            periodSeconds: 10

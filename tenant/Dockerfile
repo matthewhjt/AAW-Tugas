@@ -2,12 +2,12 @@ FROM node:18.18.2 AS builder
 
 WORKDIR /tenant
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 
-RUN npm install -g pnpm && pnpm install --prod
+RUN npm install -g pnpm typescript
 
 # Install dependencies
-RUN corepack enable && pnpm install --no-frozen-lockfile
+RUN pnpm install
 
 # Copy source
 COPY . .
@@ -27,17 +27,16 @@ FROM node:18.18.2-slim
 ENV PORT 8003
 ENV NODE_ENV production
 
-WORKDIR /tenant
+WORKDIR /tenants
 
 # Copy hasil build dari builder
-COPY --from=builder /tenant /tenant
+COPY --from=builder /tenant/dist ./dist
 
-COPY --from=builder /tenant/drizzle /tenant/drizzle
+COPY --from=builder /tenant/package.json ./package.json
 
-RUN npm install -g pnpm && pnpm install --prod
+COPY --from=builder /tenant/drizzle ./drizzle
 
-# Install dependencies untuk production
-RUN pnpm install --prod --frozen-lockfile
+RUN npm install --only=production
 
 EXPOSE 8003
 

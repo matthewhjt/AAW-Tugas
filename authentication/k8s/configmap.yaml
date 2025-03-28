@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-config
+data:
+  DB_HOST: "postgres-auth"
+  DB_PORT: "5432"
+  POSTGRES_USER: "postgres"
+  POSTGRES_DB: "aaw-tugas-1-auth"
+  NODE_ENV: "production"
+  PORT: "8000"

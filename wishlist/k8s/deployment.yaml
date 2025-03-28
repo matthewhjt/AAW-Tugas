@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wishlists-deployment
+  labels:
+    app: wishlists
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wishlists
+  template:
+    metadata:
+      labels:
+        app: wishlists
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ["sh", "-c", "until nc -z postgres-wishlists 5432; do echo waiting for db; sleep 2; done;"]
+        - name: migrate-db
+          image: wishlists-service:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "node dist/src/db/migrate.js"]
+          envFrom:
+            - configMapRef:
+                name: wishlists-config
+            - secretRef:
+                name: wishlists-secret
+
+      containers:
+        - name: wishlists
+          image: wishlists-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8004
+          envFrom:
+            - configMapRef:
+                name: wishlists-config
+            - secretRef:
+                name: wishlists-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 3
+            periodSeconds: 10

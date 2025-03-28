@@ -2,12 +2,12 @@ FROM node:18.18.2 AS builder
 
 WORKDIR /authentication
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json ./
 
-RUN npm install -g pnpm && pnpm install --prod
+RUN npm install -g pnpm typescript
 
 # Install dependencies
-RUN corepack enable && pnpm install --no-frozen-lockfile
+RUN pnpm install
 
 # Copy source
 COPY . .
@@ -30,14 +30,13 @@ ENV NODE_ENV production
 WORKDIR /authentication
 
 # Copy hasil build dari builder
-COPY --from=builder /authentication /authentication
+COPY --from=builder /authentication/dist ./dist
 
-COPY --from=builder /authentication/drizzle /authentication/drizzle
+COPY --from=builder /authentication/package.json ./package.json
 
-RUN npm install -g pnpm && pnpm install --prod
+COPY --from=builder /authentication/drizzle ./drizzle
 
-# Install dependencies untuk production
-RUN pnpm install --prod --frozen-lockfile
+RUN npm install --only=production
 
 EXPOSE 8000
 

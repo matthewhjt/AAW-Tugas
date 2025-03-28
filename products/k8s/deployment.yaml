@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products-deployment
+  labels:
+    app: products
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+  template:
+    metadata:
+      labels:
+        app: products
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ["sh", "-c", "until nc -z postgres-products 5432; do echo waiting for db; sleep 2; done;"]
+        - name: migrate-db
+          image: products-service:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "node dist/src/db/migrate.js"]
+          envFrom:
+            - configMapRef:
+                name: products-config
+            - secretRef:
+                name: products-secret
+
+      containers:
+        - name: products
+          image: products-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8002
+          envFrom:
+            - configMapRef:
+                name: products-config
+            - secretRef:
+                name: products-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8002
+            initialDelaySeconds: 3
+            periodSeconds: 10

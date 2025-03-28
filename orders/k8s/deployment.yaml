@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-deployment
+  labels:
+    app: orders
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders
+  template:
+    metadata:
+      labels:
+        app: orders
+    spec:
+      initContainers:
+        - name: wait-for-db
+          image: busybox
+          command: ["sh", "-c", "until nc -z postgres-orders 5432; do echo waiting for db; sleep 2; done;"]
+        - name: migrate-db
+          image: orders-service:latest
+          imagePullPolicy: Never
+          command: ["sh", "-c", "node dist/src/db/migrate.js"]
+          envFrom:
+            - configMapRef:
+                name: orders-config
+            - secretRef:
+                name: orders-secret
+
+      containers:
+        - name: orders
+          image: orders-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8001
+          envFrom:
+            - configMapRef:
+                name: orders-config
+            - secretRef:
+                name: orders-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 3
+            periodSeconds: 10
