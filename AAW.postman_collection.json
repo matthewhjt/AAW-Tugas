@@ -1,0 +1,1487 @@
+{
+	"info": {
+		"_postman_id": "0397e42c-d53e-4a30-ae1d-acda8444780a",
+		"name": "AAW",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29703295"
+	},
+	"item": [
+		{
+			"name": "Tugas 1",
+			"item": [
+				{
+					"name": "Monolith",
+					"item": [
+						{
+							"name": "Healthy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/health",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "API Info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}",
+									"host": [
+										"{{localhost}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Authentication",
+					"item": [
+						{
+							"name": "Health",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{authPort}}/health",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{authPort}}",
+									"path": [
+										"health"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Info",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{authPort}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{authPort}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testuser\",\r\n    \"email\": \"testuser@aaw.com\",\r\n    \"password\": \"Testuser123\",\r\n    \"full_name\": \"test user\",\r\n    \"address\": \"test user address\",\r\n    \"phone_number\": \"0123456789\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{authPort}}/api/auth/register",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{authPort}}",
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var token = pm.response.json().token;\r",
+											"pm.environment.set(\"token\", token);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"testuser1\",\r\n    \"password\": \"Testuser123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{authPort}}/api/auth/login",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{authPort}}",
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Token",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"token\": \"{{token}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{authPort}}/api/auth/verify-token",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{authPort}}",
+									"path": [
+										"api",
+										"auth",
+										"verify-token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Verify Token Admin",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"token\": \"{{adminToken}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{authPort}}/api/auth/verify-admin-token",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{authPort}}",
+									"path": [
+										"api",
+										"auth",
+										"verify-admin-token"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Product",
+					"item": [
+						{
+							"name": "Get All Products",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var products = pm.response.json().products;\r",
+											"\r",
+											"if (products && Array.isArray(products)) {\r",
+											"    var productIds = products.map(product => product.id);\r",
+											"    pm.environment.set(\"productIds\", JSON.stringify(productIds));\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Categories",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/category",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product By Id",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"var productIds = pm.environment.get(\"productIds\");\r",
+											"\r",
+											"if (productIds) {\r",
+											"    var parsedIds = JSON.parse(productIds); // Convert string to array\r",
+											"    var firstProduct = parsedIds[0]; // Get first item\r",
+											"    pm.environment.set(\"productId\", firstProduct);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/{{productId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Products By IDs",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"productIds\": {{productIds}}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/many",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"many"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Product By Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/category/{{categoryId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"category",
+										"{{categoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var newID = pm.response.json().id;\r",
+											"var existingIDs = pm.environment.get(\"productIds\");\r",
+											"\r",
+											"if (existingIDs) {\r",
+											"    existingIDs = JSON.parse(existingIDs);\r",
+											"} else {\r",
+											"    existingIDs = [];\r",
+											"}\r",
+											"\r",
+											"existingIDs.push(newID);\r",
+											"pm.environment.set(\"productIds\", JSON.stringify(existingIDs));\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"produt name 2\",\r\n    \"description\": \"product desc 2\",\r\n    \"price\": 100,\r\n    \"quantity_available\": 100,\r\n    \"category_id\": \"{{categoryId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Category",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var categoryId = pm.response.json().id;\r",
+											"pm.environment.set(\"categoryId\", categoryId);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"category 1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/category",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"product name edited\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/{{productId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Category",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"category edited\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/category/{{categoryId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"category",
+										"{{categoryId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var productIds = pm.environment.get(\"productIds\");\r",
+											"\r",
+											"if (productIds) {\r",
+											"    var parsedIds = JSON.parse(productIds); // Convert string to array\r",
+											"    var firstProduct = parsedIds[0]; // Get first item\r",
+											"    pm.environment.set(\"productId\", firstProduct);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/{{productId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"{{productId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Category",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{productPort}}/api/product/category/3e342a2e-680a-4be4-8b15-cb3107cf50eb",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{productPort}}",
+									"path": [
+										"api",
+										"product",
+										"category",
+										"3e342a2e-680a-4be4-8b15-cb3107cf50eb"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tenant",
+					"item": [
+						{
+							"name": "Get Tenant By ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{tenantPort}}/api/tenant/{{tenantId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{tenantPort}}",
+									"path": [
+										"api",
+										"tenant",
+										"{{tenantId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Tenant",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"tenant 1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{tenantPort}}/api/tenant",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{tenantPort}}",
+									"path": [
+										"api",
+										"tenant"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Tenant",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"tenant user\",\r\n    \"owner_id\": \"26050cce-fcfc-4038-93ad-b96e08eafbf1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{tenantPort}}/api/tenant/16fee740-33a2-48a5-8ac8-a2b11b55edd4",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{tenantPort}}",
+									"path": [
+										"api",
+										"tenant",
+										"16fee740-33a2-48a5-8ac8-a2b11b55edd4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Tenant",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{adminToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tenant_id\": \"{{tenantId}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{tenantPort}}/api/tenant",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{tenantPort}}",
+									"path": [
+										"api",
+										"tenant"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Wishlist",
+					"item": [
+						{
+							"name": "Get All Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Wishlist By Id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/{{wishlistId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										"{{wishlistId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"wishlist user 2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"edited wishlist name\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/{{wishlistId}}",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										"{{wishlistId}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/35e68e75-e989-461c-b4c1-644d41a6d6b9",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										"35e68e75-e989-461c-b4c1-644d41a6d6b9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Product to Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"wishlist_id\": \"2ae94b0f-2bdc-4b30-8f28-41ecafc80c7d\",\r\n    \"product_id\": \"8b948187-b2d7-4d6d-b9d4-2638d105b51b\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/add",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Product from Wishlist",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"4aa69a5f-b70f-450d-9271-0a83daf8eeab\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}:{{wishlistPort}}/api/wishlist/remove",
+									"host": [
+										"{{localhost}}"
+									],
+									"port": "{{wishlistPort}}",
+									"path": [
+										"api",
+										"wishlist",
+										"remove"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Orders",
+					"item": [
+						{
+							"name": "Order",
+							"item": [
+								{
+									"name": "Get Orders",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/order",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Order Detail",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/order/{{orderId}}",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"order",
+												"{{orderId}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Place Order",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var orderId = pm.response.json.order.id;\r",
+													"pm.environment.set(\"orderId\", orderId);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"shipping_provider\": \"JNE\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/order",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"order"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Pay Order",
+									"request": {
+										"auth": {
+											"type": "jwt",
+											"jwt": [
+												{
+													"key": "secret",
+													"value": "",
+													"type": "string"
+												},
+												{
+													"key": "algorithm",
+													"value": "HS256",
+													"type": "string"
+												},
+												{
+													"key": "isSecretBase64Encoded",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "payload",
+													"value": "{}",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												},
+												{
+													"key": "headerPrefix",
+													"value": "Bearer",
+													"type": "string"
+												},
+												{
+													"key": "queryParamKey",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "header",
+													"value": "{}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"payment_method\": \"BANK_TRANSFER\",\r\n    \"payment_reference\": \"012345689\",\r\n    \"amount\": 100\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/order/{{orderId}}/pay",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"order",
+												"{{orderId}}",
+												"pay"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cancel Order",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/order/{{orderId}}/cancel",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"order",
+												"{{orderId}}",
+												"cancel"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Cart",
+							"item": [
+								{
+									"name": "Get Carts",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/cart",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"cart"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add Product To Cart",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"var cartId = pm.response.json.id;\r",
+													"pm.environment.set(\"cartId\", cartId);"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"product_id\": \"{{productId}}\",\r\n    \"quantity\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/cart",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"cart"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Edit Cart",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"cart_id\": \"416a21d2-ae4e-40d1-871c-da2507b05dc5\",\r\n    \"quantity\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/cart",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"cart"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Item from Product",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"product_id\": \"{{productId}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{localhost}}:{{ordersPort}}/api/cart",
+											"host": [
+												"{{localhost}}"
+											],
+											"port": "{{ordersPort}}",
+											"path": [
+												"api",
+												"cart"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
