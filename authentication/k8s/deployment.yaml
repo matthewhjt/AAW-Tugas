@@ -16,7 +16,7 @@ spec:
     spec:
       initContainers:
         - name: migrate-db
-          image: authentication-service:lates
+          image: matthewhjt/authentication-service:latest
           command: ["sh", "-c", "node dist/src/db/migrate.js"]
           envFrom:
             - configMapRef:
@@ -26,7 +26,7 @@ spec:
 
       containers:
         - name: auth
-          image: authentication-service:latest
+          image: matthewhjt/authentication-service:latest
           ports:
             - containerPort: 8000
           envFrom:
