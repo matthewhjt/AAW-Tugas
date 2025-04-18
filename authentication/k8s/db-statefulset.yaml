@@ -13,6 +13,8 @@ spec:
       labels:
         app: postgres-auth
     spec:
+      nodeSelector:
+        kubernetes.io/hostname: ip-172-31-28-237
       containers:
         - name: postgres
           image: postgres:15
