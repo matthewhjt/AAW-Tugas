@@ -14,6 +14,10 @@ spec:
       labels:
         app: auth
     spec:
+      tolerations:
+        - key: "node-role.kubernetes.io/master"
+          operator: "Exists"
+          effect: "NoSchedule"
       initContainers:
         - name: migrate-db
           image: matthewhjt/authentication-service:latest
