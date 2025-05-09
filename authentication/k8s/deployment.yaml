@@ -15,7 +15,7 @@ spec:
         app: auth
     spec:
       nodeSelector:
-        node-role: worker
+        node-role.kubernetes.io/worker: "true"
       initContainers:
         - name: migrate-db
           image: matthewhjt/authentication-service:latest
