@@ -13,6 +13,8 @@ spec:
       labels:
         app: postgres-orders
     spec:
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
       containers:
         - name: postgres
           image: postgres:15
