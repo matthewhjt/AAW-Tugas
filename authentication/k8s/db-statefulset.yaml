@@ -14,7 +14,7 @@ spec:
         app: postgres-auth
     spec:
       nodeSelector:
-        kubernetes.io/hostname: ip-172-31-28-237
+        node-role: worker
       containers:
         - name: postgres
           image: postgres:15

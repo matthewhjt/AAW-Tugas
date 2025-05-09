@@ -14,12 +14,8 @@ spec:
       labels:
         app: auth
     spec:
-      tolerations:
-        - key: "node-role.kubernetes.io/master"
-          operator: "Exists"
-          effect: "NoSchedule"
       nodeSelector:
-        kubernetes.io/hostname: ip-172-31-28-237  # Menambahkan nodeSelector
+        node-role: worker
       initContainers:
         - name: migrate-db
           image: matthewhjt/authentication-service:latest
