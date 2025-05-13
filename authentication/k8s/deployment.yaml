@@ -19,7 +19,7 @@ spec:
       initContainers:
         - name: wait-for-db
           image: busybox
-          command: ["sh", "-c", "until nc -z postgres-auth 5432; do echo waiting for db; sleep 2; done;"]
+          command: ["sh", "-c", "until nc -z postgres-auth.database.svc.cluster.local 5432; do echo waiting for db; sleep 2; done;"]
         - name: migrate-db
           image: matthewhjt/authentication-service:latest
           command: ["sh", "-c", "node dist/src/db/migrate.js"]
