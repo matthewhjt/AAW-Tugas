@@ -18,8 +18,8 @@ spec:
         node-role.kubernetes.io/worker: "true"
       initContainers:
         - name: wait-for-db
-          image: busybox:1.28
-          command: ["sh", "-c", "until nc -z postgres-auth 5432; do echo waiting for db; sleep 2; done;"]
+          image: bitnami/minideb
+          command: ["sh", "-c", "apt-get update && apt-get install -y netcat && until nc -z postgres-auth 5432; do echo waiting for db; sleep 2; done;"]
         - name: migrate-db
           image: matthewhjt/authentication-service:latest
           command: ["sh", "-c", "node dist/src/db/migrate.js"]
