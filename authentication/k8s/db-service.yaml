@@ -9,4 +9,4 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
-  clusterIP: None  # Agar StatefulSet mendapatkan DNS internal yang stabil
+  type: ClusterIP
