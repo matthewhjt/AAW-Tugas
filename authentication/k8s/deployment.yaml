@@ -17,7 +17,6 @@ spec:
       nodeSelector:
         node-role.kubernetes.io/worker: "true"
       initContainers:
-        initContainers:
         - name: wait-for-db
           image: appropriate/curl
           command: ["sh", "-c", "until nc -z postgres-auth 5432; do echo waiting for db; sleep 2; done;"]
