@@ -18,7 +18,7 @@ spec:
         node-role.kubernetes.io/worker: "true"
       initContainers:
         - name: wait-for-db
-          image: appropriate/curl
+          image: busybox:1.28
           command: ["sh", "-c", "until nc -z postgres-auth 5432; do echo waiting for db; sleep 2; done;"]
         - name: migrate-db
           image: matthewhjt/authentication-service:latest
